@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="RCAttrs">
+        <attr name="round_as_circle" format="boolean" />
+        <attr name="round_corner" format="dimension" />
+        <attr name="round_corner_top_left" format="dimension" />
+        <attr name="round_corner_top_right" format="dimension" />
+        <attr name="round_corner_bottom_left" format="dimension" />
+        <attr name="round_corner_bottom_right" format="dimension" />
+        <attr name="stroke_color" format="color" />
+        <attr name="stroke_width" format="dimension" />
+        <attr name="clip_background" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="BannerX">
+        <attr name="bannerx_loop_time" format="integer" />
+        <attr name="bannerx_auto_loop" format="boolean" />
+        <attr name="bannerx_orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>
