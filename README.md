@@ -2,7 +2,7 @@
 
 这是一款Android平台下的轮播控件，支持图片，视频以及图片视频混合轮播，支持自定义Item，自定义指示器，自定义切换动画以及自定义视频播放引擎。
 
-# Preview
+## Preview
 
 <!-- Add a demo for your project -->
 
@@ -15,16 +15,22 @@ Here is a random GIF as a placeholder.
 
 # Functions
 
-1）自定义轮播内容
+1）支持自定义轮播内容
     轮播内容：
         1 图片
         2 视频
         3 图片视频混合
-三种轮播内容均支持 自动轮播，无限轮播，视频默认播放完毕切换下一个Item
+    三种轮播内容均支持 自动轮播，无限轮播，视频默认播放完毕切换下一个
 
-2）自定义指示器
+2) 支持自定义Item
 
-3）自定义Item切换效果
+3）支持自定义指示器
+
+4）支持自定义Item切换效果
+
+5）支持自定义视频播放引擎
+
+6） 支持自定义Item圆角
 
 # Installation
 
@@ -50,6 +56,7 @@ xml
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 ```
+
 kotlin
 ```
             val banners = mutableListOf<String>(
@@ -75,7 +82,7 @@ kotlin
 ```
 
 
-# Development
+# APIS
 
 [(Back to top)](#table-of-contents)
 
@@ -87,13 +94,6 @@ You could also give specific instructions to how they can setup their developmen
 
 Ideally, you should keep the README simple. If you need to add more complex explanations, use a wiki. Check out [this wiki](https://github.com/navendu-pottekkat/nsfw-filter/wiki) for inspiration. -->
 
-# Contribute
-
-[(Back to top)](#table-of-contents)
-
-<!-- This is where you can let people know how they can **contribute** to your project. Some of the ways are given below.
-
-Also this shows how you can add subsections within a section. -->
 
 ### Sponsor
 
