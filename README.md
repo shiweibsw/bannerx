@@ -4,6 +4,10 @@
 
 ## Preview
 
+![图片](https://github.com/shiweibsw/bannerx/blob/master/screenshot/img.gif)
+![视频](https://github.com/shiweibsw/bannerx/blob/master/screenshot/video.gif)
+![图片&视频](https://github.com/shiweibsw/bannerx/blob/master/screenshot/mix.gif)
+
 <!-- Add a demo for your project -->
 
 <!-- After you have written about your project, it is a good idea to have a demo/preview(**video/gif/screenshots** are good options) of your project so that people can know what to expect in your project. You could also add the demo in the previous section with the product description.
@@ -12,13 +16,11 @@ Here is a random GIF as a placeholder.
 
 ![Random GIF](https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif) -->
 
-
 ## Functions
 
 1.支持自定义轮播内容
-    
-轮播内容(图片,视频, 图片视频混合),三种轮播内容均支持 自动轮播，无限轮播，视频默认播放完毕切换下一个
 
+轮播内容(图片,视频, 图片视频混合),三种轮播内容均支持 自动轮播，无限轮播，视频默认播放完毕切换下一个
 
 2. 支持自定义Item
 
@@ -40,10 +42,10 @@ Here is a random GIF as a placeholder.
  implementation 'io.github.shiwebsw:bannerx:1.0.0'
 ```
 
-
 ## Usage
 
 xml
+
 ```
         <com.android.view.bannerx.library.BannerX
             android:id="@+id/bannerX"
@@ -56,6 +58,7 @@ xml
 ```
 
 kotlin
+
 ```
             val banners = mutableListOf<String>(
                 "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
@@ -79,7 +82,6 @@ kotlin
             }
 ```
 
-
 ## APIS
 
 [(Back to top)](#table-of-contents)
@@ -91,7 +93,6 @@ You could give **instructions in depth** of **how the code works** and how every
 You could also give specific instructions to how they can setup their development environment.
 
 Ideally, you should keep the README simple. If you need to add more complex explanations, use a wiki. Check out [this wiki](https://github.com/navendu-pottekkat/nsfw-filter/wiki) for inspiration. -->
-
 
 # License
 
