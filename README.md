@@ -4,9 +4,9 @@
 
 ## Preview
 
-![图片](https://github.com/shiweibsw/bannerx/blob/master/screenshot/img.gif)
-![视频](https://github.com/shiweibsw/bannerx/blob/master/screenshot/video.gif)
-![图片&视频](https://github.com/shiweibsw/bannerx/blob/master/screenshot/mix.gif)
+![图片](screenshot/img.gif)
+![视频](screenshot/video.gif)
+![图片&视频](screenshot/mix.gif)
 
 <!-- Add a demo for your project -->
 
