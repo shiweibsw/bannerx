@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         bingding.apply {
             val banners = mutableListOf<String>(
                 "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
-                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+                "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
             )
             bannerX.apply {
