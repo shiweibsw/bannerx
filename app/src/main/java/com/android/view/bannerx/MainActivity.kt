@@ -22,16 +22,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bingding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         bingding.apply {
-            val banners = mutableListOf<String>()
-            val root = Environment.getExternalStorageDirectory().absolutePath + File.separator
-            banners.addAll(
-                listOf(
-                    "http://hengdawb-res.oss-cn-hangzhou.aliyuncs.com/zlg_test_res/video01.mp4",
-                    "http://hengdawb-res.oss-cn-hangzhou.aliyuncs.com/zlg_test_res/video02.mp4",
-                    "${root}HD_DSP_TJBWG_CH/EXHIBIT/4/lb_img.png",
-                    "${root}HD_DSP_TJBWG_CH/EXHIBIT/5/lb_img.png",
-                    "${root}HD_DSP_TJBWG_CH/EXHIBIT/11/lb_img.jpg"
-                )
+            val banners = mutableListOf<String>(
+                "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
+                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+                "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
             )
             bannerX.apply {
                 val indicatorView = IndicatorView(this@MainActivity)
@@ -46,7 +40,6 @@ class MainActivity : AppCompatActivity() {
                             Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
                     }
                 })
-                useThreePagesOnOneScreen(32.0f, 32.0f, 0.7f)
                 start()
             }
         }

@@ -12,26 +12,19 @@ Here is a random GIF as a placeholder.
 
 ![Random GIF](https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif) -->
 
-# Table of contents
 
-<!-- After you have introduced your project, it is a good idea to add a **Table of contents** or **TOC** as **cool** people say it. This would make it easier for people to navigate through your README and find exactly what they are looking for.
+# Functions
 
-Here is a sample TOC(*wow! such cool!*) that is actually the TOC for this README.
+1）自定义轮播内容
+    轮播内容：
+        1 图片
+        2 视频
+        3 图片视频混合
+三种轮播内容均支持 自动轮播，无限轮播，视频默认播放完毕切换下一个Item
 
+2）自定义指示器
 
-- [Project Title](#project-title)
-- [Demo-Preview](#demo-preview)
-- [Table of contents](#table-of-contents)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Development](#development)
-- [Contribute](#contribute)
-    - [Sponsor](#sponsor)
-    - [Adding new features or fixing bugs](#adding-new-features-or-fixing-bugs)
-- [License](#license)
-- [Footer](#footer)
--->
-
+3）自定义Item切换效果
 
 # Installation
 
@@ -46,9 +39,41 @@ Here is a sample TOC(*wow! such cool!*) that is actually the TOC for this README
 
 # Usage
 
-[(Back to top)](#table-of-contents)
+xml
+```
+        <com.android.view.bannerx.library.BannerX
+            android:id="@+id/bannerX"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+```
+kotlin
+```
+            val banners = mutableListOf<String>(
+                "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
+                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+                "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
+            )
+            bannerX.apply {
+                val indicatorView = IndicatorView(this@MainActivity)
+                    .setIndicatorColor(Color.BLACK)
+                    .setIndicatorSelectorColor(Color.WHITE)
+                    .setIndicatorStyle(INDICATOR_CIRCLE_RECT)
+                setIndicator(indicatorView)
+                setAdapter(object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
+                    override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
+                        super.onBindViewHolder(holder, position)
+                        if (getItemViewType(position) == TYPE_IMG)
+                            Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
+                    }
+                })
+                start()
+            }
+```
 
-<!-- This is optional and it is used to give the user info on how to use the project after installation. This could be added in the Installation section also. -->
 
 # Development
 

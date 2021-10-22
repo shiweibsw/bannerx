@@ -1,6 +1,5 @@
 package com.android.view.bannerx.library.adapter
 
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
@@ -16,8 +15,6 @@ import com.android.view.bannerx.library.R
 import com.android.view.bannerx.library.util.ControllerUtil
 import com.android.view.bannerx.library.video.BannerPlayer
 import com.android.view.bannerx.library.video.InnerPlayerListener
-import java.io.IOException
-import java.net.URL
 
 open class DefaultVideoAdapter(
     private var player: BannerPlayer,
@@ -26,7 +23,7 @@ open class DefaultVideoAdapter(
     BannerXAdapter<String, DefaultVideoAdapter.DefaultVideoHolder>(banners) {
 
     override fun getItemViewType(position: Int): Int {
-        return if (banners[position].endsWith("png") || banners[position].endsWith("jpg")) TYPE_IMG else TYPE_VIDEO
+        return if (banners[position].endsWith("mp4")) TYPE_VIDEO else TYPE_IMG
     }
 
     override fun getItemCount(): Int = banners.size
