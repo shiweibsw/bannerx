@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         bingding.apply {
             val banners = mutableListOf<String>(
                 "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
-                "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF",
+                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
             )
             bannerX.apply {
@@ -37,25 +37,28 @@ class MainActivity : AppCompatActivity() {
                     .setIndicatorSelectorColor(Color.WHITE)
                     .setIndicatorStyle(INDICATOR_CIRCLE_RECT)
                 setIndicator(indicatorView)
-
-                val mAdapter = object : DefaultRcLayoutAdapter<String>(10.0f, banners) {
-                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
-                        super.onBindViewHolder(holder, position)
-                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
-                    }
-                }
-
-//                mAdapter = object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
-//                    override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
+//                val mAdapter = object : DefaultImageAdapter<String>(banners) {
+//                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
 //                        super.onBindViewHolder(holder, position)
-//                        if (getItemViewType(position) == TYPE_IMG)
-//                            Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
+//                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
+//                    }
+//                }
+//                val mAdapter = object : DefaultRcLayoutAdapter<String>(10.0f, banners) {
+//                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
+//                        super.onBindViewHolder(holder, position)
+//                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
 //                    }
 //                }
 
+                var mAdapter = object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
+                    override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
+                        super.onBindViewHolder(holder, position)
+                        if (getItemViewType(position) == TYPE_IMG)
+                            Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
+                    }
+                }
 
                 setAdapter(mAdapter)
-                useThreePagesOnOneScreen(40.0f, 40.0f, ZOOM_OUT)
                 start()
             }
         }

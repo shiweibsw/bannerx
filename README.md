@@ -52,7 +52,7 @@ kotlin
 ```
             val banners = mutableListOf<String>(
                 "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
-                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+                "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
             )
 
@@ -118,6 +118,10 @@ BannerX 内置了三种默认的Adapter
 
 ### 注意：BannerX没有处理Item点击事件，如果需要请在Adapter中自行处理。
 
+
+
+
+
 ## APIS
 
 |Attributes|format|describe
@@ -152,6 +156,21 @@ BannerX 内置了三种默认的Adapter
 |setPlayer()|设置自定义的player引擎，默认使用的是Exoplayer
 |setVideoPlayWhenReady()|播放器准备完成时候立即播放
 
+### Indicator
+
+参考自：![https://github.com/zguop/banner](https://github.com/zguop/banner)
+
+|方法名|描述|
+|---|---|
+|setIndicatorStyle|共有5种切换效果，详见下表|
+|setIndicatorColor|未选中颜色|
+|setIndicatorSelectorColor|选中颜色|
+|setIndicatorSpacing|选中颜色|
+|setIndicatorRadius|设置indicator的圆角，同时会改变选中时的圆角，default 3.5dp|
+|setIndicatorRatio|设置indicator比例，拉伸圆为矩形，控制该比例，default 1.0|
+|setIndicatorSelectorColor|设置点与点之间的距离，default dp10|
+|setIndicatorSelectedRatio|设置选中圆比例，拉伸圆为矩形，控制该比例，默认比例和indicatorRatio一致|
+|setIndicatorSelectedRadius|设置选中的圆角，没有设置，默认和indicatorRadius值一致|
 # License
 
 ```
