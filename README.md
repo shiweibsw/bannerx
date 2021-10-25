@@ -158,7 +158,7 @@ BannerX 内置了三种默认的Adapter
 
 ### Indicator
 
-参考自：![https://github.com/zguop/banner](https://github.com/zguop/banner)
+参考自：[https://github.com/zguop/banner](https://github.com/zguop/banner)
 
 |方法名|描述|
 |---|---|
