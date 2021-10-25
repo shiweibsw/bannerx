@@ -5,7 +5,6 @@
 ## Preview
 
 ![图片](./screenshot/img.gif)
-![视频](./screenshot/video.gif)
 ![图片&视频](./screenshot/mix.gif)
 
 ## Functions
@@ -31,7 +30,7 @@
         mavenCentral()
  }
  
- implementation 'io.github.shiwebsw:bannerx:1.0.0'
+ implementation 'io.github.shiwebsw:bannerx:1.1.0'
 ```
 
 ## Usage
@@ -57,12 +56,58 @@ kotlin
                 "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
             )
+```
+
+```
             bannerX.apply {
                 val indicatorView = IndicatorView(this@MainActivity)
                     .setIndicatorColor(Color.BLACK)
                     .setIndicatorSelectorColor(Color.WHITE)
                     .setIndicatorStyle(INDICATOR_CIRCLE_RECT)
                 setIndicator(indicatorView)
+                setAdapter(object : DefaultImageAdapter<String>(banners) {
+                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
+                        super.onBindViewHolder(holder, position)
+                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
+                    }
+                })
+                start()
+            }
+```
+
+BannerX 内置了三种默认的Adapter
+
+|Adapter|描述|效果|
+|---|---|---|
+|DefaultImageAdapter|纯图片轮播|![图片](./screenshot/img.gif)|
+|DefaultRcLayoutAdapter|圆角Item轮播|![圆角](./screenshot/round_corner.gif)|
+|DefaultVideoAdapter|视频&图片轮播|![图片&视频](./screenshot/mix.gif)|
+
+默认图片Adapter
+
+```
+                setAdapter(object : DefaultImageAdapter<String>(banners) {
+                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
+                        super.onBindViewHolder(holder, position)
+                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
+                    }
+                })
+```
+
+默认圆角图片Adapter
+
+```
+                setAdapter(object : DefaultRcLayoutAdapter<String>(10.0f, banners) {
+                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
+                        super.onBindViewHolder(holder, position)
+                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
+                    }
+                })
+```
+
+默认视频&图片Adapter
+
+```
                 setAdapter(object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
                     override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
                         super.onBindViewHolder(holder, position)
@@ -70,9 +115,11 @@ kotlin
                             Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
                     }
                 })
-                start()
-            }
 ```
+
+默认Adapter如果不满足样式，参考默认实现及具体需求自定义即可。
+
+### 注意：BannerX没有处理Item点击事件，如果需要请在Adapter中自行处理。
 
 ## APIS
 

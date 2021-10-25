@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import com.android.view.bannerx.databinding.ActivityMainBinding
 import com.android.view.bannerx.library.BannerX.Companion.OVER_LAP
 import com.android.view.bannerx.library.BannerX.Companion.ZOOM_OUT
+import com.android.view.bannerx.library.adapter.BannerXAdapter
+import com.android.view.bannerx.library.adapter.DefaultImageAdapter
 import com.android.view.bannerx.library.adapter.DefaultRcLayoutAdapter
 import com.android.view.bannerx.library.adapter.DefaultVideoAdapter
 import com.android.view.bannerx.library.indicator.IndicatorView
@@ -20,7 +22,6 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bingding: ActivityMainBinding
-    private lateinit var mAdapter: DefaultVideoAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bingding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -36,13 +37,23 @@ class MainActivity : AppCompatActivity() {
                     .setIndicatorSelectorColor(Color.WHITE)
                     .setIndicatorStyle(INDICATOR_CIRCLE_RECT)
                 setIndicator(indicatorView)
-                mAdapter = object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
-                    override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
+
+                val mAdapter = object : DefaultRcLayoutAdapter<String>(10.0f, banners) {
+                    override fun onBindViewHolder(holder: DefaultImageHolder, position: Int) {
                         super.onBindViewHolder(holder, position)
-                        if (getItemViewType(position) == TYPE_IMG)
-                            Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
+                        Glide.with(holder.itemView).load(banners[position]).into(holder.img)
                     }
                 }
+
+//                mAdapter = object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
+//                    override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
+//                        super.onBindViewHolder(holder, position)
+//                        if (getItemViewType(position) == TYPE_IMG)
+//                            Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
+//                    }
+//                }
+
+
                 setAdapter(mAdapter)
                 useThreePagesOnOneScreen(40.0f, 40.0f, ZOOM_OUT)
                 start()
