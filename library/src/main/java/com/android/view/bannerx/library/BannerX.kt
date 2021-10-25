@@ -8,6 +8,8 @@ import android.os.Message
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.IntDef
+import androidx.annotation.RestrictTo
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -15,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import com.android.view.bannerx.library.adapter.BannerXAdapter
 import com.android.view.bannerx.library.extends.dp2px
 import com.android.view.bannerx.library.indicator.Indicator
+import com.android.view.bannerx.library.transformer.OverlapSliderTransformer
 import com.android.view.bannerx.library.transformer.ZoomOutSlideTransformer
 import com.android.view.bannerx.library.util.ScrollSpeedManger
 import com.android.view.bannerx.library.video.BannerPlayer
@@ -22,6 +25,9 @@ import com.android.view.bannerx.library.video.DefaultBannerPlayer
 import com.android.view.bannerx.library.video.InnerPlayerListener
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import javax.xml.transform.Transformer
 
 
 /**
@@ -30,6 +36,11 @@ import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
  * @Email shiweibsw@gmail.com
  */
 class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLayout {
+    companion object {
+        const val ZOOM_OUT = 0
+        const val OVER_LAP = 1
+    }
+
     private val TAG = "BannerX"
     private val MIN_LOOP_TIME: Long = 1000
     private val DEFUT_LOOP_TIME: Long = 3000
@@ -74,8 +85,15 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
 
     private var banners = mutableListOf<T>()
 
-    //====================================================
+    private var transformers = HashSet<ViewPager2.PageTransformer>()
+
     private var videoPlayer: BannerPlayer? = null
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(ZOOM_OUT, OVER_LAP)
+    annotation class SliderType {}
+
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -108,7 +126,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 currentItemIndex = position
-                mIndicator?.let { it.onPageSelected(toRealPosition(position)) }
+                mIndicator?.onPageSelected(toRealPosition(position))
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -140,7 +158,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
                         clearHandlerTask()
                     }
                 }
-                mIndicator?.let { it.onPageScrollStateChanged(state) }
+                mIndicator?.onPageScrollStateChanged(state)
             }
 
             override fun onPageScrolled(
@@ -149,13 +167,11 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
                 positionOffsetPixels: Int
             ) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                mIndicator?.let {
-                    it.onPageScrolled(
-                        toRealPosition(position),
-                        positionOffset,
-                        positionOffsetPixels
-                    )
-                }
+                mIndicator?.onPageScrolled(
+                    toRealPosition(position),
+                    positionOffset,
+                    positionOffsetPixels
+                )
             }
         })
         addView(viewPager)
@@ -282,6 +298,9 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
 
     //======================================public method==============================
 
+    /**
+     * set adapter
+     */
     fun setAdapter(adapter: BA, isInfiniteLoop: Boolean = true) {
         if (adapter.getDatas().isEmpty()) {
             throw IllegalArgumentException("datas can not be empty")
@@ -306,7 +325,29 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
     }
 
     /**
-     * set indicator view
+     * set new datas for bannerx
+     */
+    fun setNewDatas(l: MutableList<T>) {
+        if (mAdapter == null) {
+            throw IllegalArgumentException("please set an adapter first!")
+        }
+        mAdapter?.let {
+            if (isInfiniteLoop && l.size > 1) {
+                currentItemIndex = 1
+                createReaDatas(l)
+            } else {
+                currentItemIndex = 0
+                banners = l
+            }
+            it.setDatas(banners)
+            it.notifyDataSetChanged()
+        }
+        viewPager.setCurrentItem(currentItemIndex, false)
+        mIndicator?.let { it.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex)) }
+    }
+
+    /**
+     * set indicator view,this function must be called before setAdapter
      */
     fun setIndicator(indicator: Indicator, attachToRoot: Boolean = true) {
         if (mIndicator != null) {
@@ -379,6 +420,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
      */
     fun addPageTransformer(transformer: ViewPager2.PageTransformer) {
         mCompositePageTransformer.addTransformer(transformer)
+        transformers.add(transformer)
     }
 
     /**
@@ -386,6 +428,25 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
      */
     fun removePageTransformer(transformer: ViewPager2.PageTransformer) {
         mCompositePageTransformer.removeTransformer(transformer)
+        if (transformers.contains(transformer)) {
+            transformers.remove(transformer)
+        }
+    }
+
+    /**
+     * Get current transformers
+     */
+    fun getCurrentTransformers(): HashSet<ViewPager2.PageTransformer> = transformers
+
+
+    /**
+     * Remove all transformers
+     */
+    fun removeAllTransformers() {
+        transformers.forEach {
+            mCompositePageTransformer.removeTransformer(it)
+        }
+        transformers.clear()
     }
 
     /**
@@ -406,9 +467,25 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
      * Three page on one screen effect
      * use minscale to controll the margin between to items.
      */
-    fun useThreePagesOnOneScreen(leftPadding: Float, rightPadding: Float, minScale: Float) {
-//        addPageTransformer(OverlapSliderTransformer(getViewPager2().orientation, 0.25f, 0f, 1f, 0f))
-        addPageTransformer(ZoomOutSlideTransformer(minScale))
+    fun useThreePagesOnOneScreen(
+        leftPadding: Float,
+        rightPadding: Float,
+        @SliderType type: Int,
+        zoomMinScale: Float = 0.8f,
+    ) {
+        if (type == ZOOM_OUT) {
+            addPageTransformer(ZoomOutSlideTransformer(zoomMinScale))
+        } else {
+            addPageTransformer(
+                OverlapSliderTransformer(
+                    getViewPager2().orientation,
+                    0.25f,
+                    0f,
+                    1f,
+                    0f
+                )
+            )
+        }
         setPageMargin(leftPadding, rightPadding)
     }
 
@@ -438,11 +515,15 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
     /**
      * Set current item
      */
-    fun setCurrentItem(position: Int) {
+    fun setCurrentItem(position: Int, smoothScroll: Boolean = true) {
         if (position < 0 && position >= banners.size) {
             return
         }
-        viewPager.currentItem = position + 1
+        if (smoothScroll) {
+            viewPager.currentItem = position + 1
+        } else {
+            viewPager.setCurrentItem(position + 1, false)
+        }
     }
 
     /**

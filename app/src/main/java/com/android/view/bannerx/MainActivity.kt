@@ -8,6 +8,8 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.android.view.bannerx.databinding.ActivityMainBinding
+import com.android.view.bannerx.library.BannerX.Companion.OVER_LAP
+import com.android.view.bannerx.library.BannerX.Companion.ZOOM_OUT
 import com.android.view.bannerx.library.adapter.DefaultRcLayoutAdapter
 import com.android.view.bannerx.library.adapter.DefaultVideoAdapter
 import com.android.view.bannerx.library.indicator.IndicatorView
@@ -18,6 +20,7 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bingding: ActivityMainBinding
+    private lateinit var mAdapter: DefaultVideoAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bingding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -33,13 +36,15 @@ class MainActivity : AppCompatActivity() {
                     .setIndicatorSelectorColor(Color.WHITE)
                     .setIndicatorStyle(INDICATOR_CIRCLE_RECT)
                 setIndicator(indicatorView)
-                setAdapter(object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
+                mAdapter = object : DefaultVideoAdapter(bannerX.getPlayer(), banners) {
                     override fun onBindViewHolder(holder: DefaultVideoHolder, position: Int) {
                         super.onBindViewHolder(holder, position)
                         if (getItemViewType(position) == TYPE_IMG)
                             Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
                     }
-                })
+                }
+                setAdapter(mAdapter)
+                useThreePagesOnOneScreen(40.0f, 40.0f, ZOOM_OUT)
                 start()
             }
         }

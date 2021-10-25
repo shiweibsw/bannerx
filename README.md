@@ -76,9 +76,37 @@ kotlin
 
 ## APIS
 
+|Attributes|format|describe
+|---|---|---|
+|bannerx_loop_time|integer|轮播间隔时间，默认3000
+|bannerx_auto_loop|boolean|是否自动轮播，默认true
+|bannerx_orientation|enum|轮播方向：horizontal（默认） or vertical
 
-
-
+|方法名|描述|
+|---|---|
+|setAdapter()|设置Adapter
+|setNewDatas()|重新设置数据源
+|setIndicator()|设置轮播指示器
+|start()|开始轮播
+|destroy()|销毁bannerx
+|setIsAutoLoop()|是否自动轮播
+|setIsInfiniteLoop()|是否无限轮播
+|setLoopTime()|设置自动轮播的时间间隔，单位ms
+|setScrollTime()|设置Item切换过程中的时间
+|getScrollTime()|获取Item切换过程中的时间
+|getViewPager2()|获得当前的ViewPage2实例
+|addPageTransformer()|增加Item切换效果
+|removePageTransformer()|移除Item切换效果
+|getCurrentTransformers()|获得当前切换效果集合（切换效果可以叠加，所以返回的是一个集合）
+|removeAllTransformers()|移除当前所有切换效果
+|setUserInputEnabled()|是否可以手势滑动切换
+|setOrientation()|Viewpage2滚动方向
+|useThreePagesOnOneScreen()|开启一屏三页效果
+|setPageMargin()|左右或上下间距
+|setCurrentItem()|设置当前Item
+|getPlayer()|获取当前的VidePlayer实例，通过此方法实现Player的控制
+|setPlayer()|设置自定义的player引擎，默认使用的是Exoplayer
+|setVideoPlayWhenReady()|播放器准备完成时候立即播放
 
 [(Back to top)](#table-of-contents)
 
