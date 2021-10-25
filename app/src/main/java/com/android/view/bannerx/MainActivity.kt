@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                             Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
                     }
                 }
-
+                addPageTransformer(ZoomOutTransformer())
                 setAdapter(mAdapter)
                 start()
             }

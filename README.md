@@ -152,6 +152,31 @@ BannerX 内置了三种默认的Adapter
 |setPlayer()|设置自定义的player引擎，默认使用的是Exoplayer
 |setVideoPlayWhenReady()|播放器准备完成时候立即播放
 
+### Transformer
+
+参考自：[Github](https://github.com)
+
+|描述|效果|
+|---|---|
+|AccordionTransformer|![AccordionTransformer](./screenshot/AccordionTransformer.gif)|
+|BackgroundToForegroundTransformer|![BackgroundToForegroundTransformer](./screenshot/BackgroundToForegroundTransformer.gif)|
+|CubeInTransformer|![CubeInTransformer](./screenshot/CubeInTransformer.gif)|
+|CubeOutTransformer|![CubeOutTransformer](./screenshot/CubeOutTransformer.gif)|
+|DepthPageTransformer|![DepthPageTransformer](./screenshot/DepthPageTransformer.gif)|
+|DrawerTransformer|![DrawerTransformer](./screenshot/DrawerTransformer.gif)|
+|FlipHorizontalTransformer|![FlipHorizontalTransformer](./screenshot/FlipHorizontalTransformer.gif)|
+|FlipVerticalTransformer|![FlipVerticalTransformer](./screenshot/FlipVerticalTransformer.gif)|
+|ForegroundToBackgroundTransformer|![ForegroundToBackgroundTransformer](./screenshot/ForegroundToBackgroundTransformer.gif)|
+|RotateDownTransformer|![RotateDownTransformer](./screenshot/RotateDownTransformer.gif)|
+|RotateUpTransformer|![RotateUpTransformer](./screenshot/RotateUpTransformer.gif)|
+|ScaleInOutTransformer|![ScaleInOutTransformer](./screenshot/ScaleInOutTransformer.gif)|
+|StackTransformer|![StackTransformer](./screenshot/StackTransformer.gif)|
+|TabletTransformer|![TabletTransformer](./screenshot/TabletTransformer.gif)|
+|ZoomInTransformer|![ZoomInTransformer](./screenshot/ZoomInTransformer.gif)|
+|ZoomOutSlideTransformer|![ZoomOutSlideTransformer](./screenshot/ZoomOutSlideTransformer.gif)|
+|ZoomOutTransformer|![ZoomOutTransformer](./screenshot/ZoomOutTransformer.gif)|
+
+
 ### Indicator
 
 参考自：[https://github.com/zguop/banner](https://github.com/zguop/banner)
