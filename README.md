@@ -29,7 +29,7 @@
         mavenCentral()
  }
  
- implementation 'io.github.shiwebsw:bannerx:1.1.0'
+ implementation 'io.github.shiwebsw:bannerx:1.1.1'
 ```
 
 ## Usage
@@ -184,9 +184,10 @@ BannerX 内置了三种默认的Adapter
 |方法名|描述|
 |---|---|
 |setIndicatorStyle|共有4种切换效果，详见下表|
-|setIndicatorColor|未选中颜色|
-|setIndicatorSelectorColor|选中颜色|
-|setIndicatorSpacing|选中颜色|
+|setGravity|设置指示器位置|
+|setIndicatorColor|设置未选中颜色|
+|setIndicatorSelectorColor|设置选中颜色|
+|setIndicatorSpacing|设置选中颜色|
 |setIndicatorRadius|设置indicator的圆角，同时会改变选中时的圆角，default 3.5dp|
 |setIndicatorRatio|设置indicator比例，拉伸圆为矩形，控制该比例，default 1.0|
 |setIndicatorSelectorColor|设置点与点之间的距离，default dp10|
