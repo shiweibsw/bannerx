@@ -118,10 +118,6 @@ BannerX 内置了三种默认的Adapter
 
 ### 注意：BannerX没有处理Item点击事件，如果需要请在Adapter中自行处理。
 
-
-
-
-
 ## APIS
 
 |Attributes|format|describe
@@ -162,7 +158,7 @@ BannerX 内置了三种默认的Adapter
 
 |方法名|描述|
 |---|---|
-|setIndicatorStyle|共有5种切换效果，详见下表|
+|setIndicatorStyle|共有4种切换效果，详见下表|
 |setIndicatorColor|未选中颜色|
 |setIndicatorSelectorColor|选中颜色|
 |setIndicatorSpacing|选中颜色|
@@ -171,6 +167,14 @@ BannerX 内置了三种默认的Adapter
 |setIndicatorSelectorColor|设置点与点之间的距离，default dp10|
 |setIndicatorSelectedRatio|设置选中圆比例，拉伸圆为矩形，控制该比例，默认比例和indicatorRatio一致|
 |setIndicatorSelectedRadius|设置选中的圆角，没有设置，默认和indicatorRadius值一致|
+
+|描述|效果|
+|---|---|
+|INDICATOR_BEZIER|![INDICATOR_BEZIER](./screenshot/INDICATOR_BEZIER.gif)|
+|INDICATOR_CIRCLE|![INDICATOR_CIRCLE](./screenshot/INDICATOR_CIRCLE.gif)|
+|INDICATOR_CIRCLE_RECT|![INDICATOR_CIRCLE_RECT](./screenshot/INDICATOR_CIRCLE_RECT.gif)|
+|INDICATOR_DASH|![INDICATOR_DASH](./screenshot/INDICATOR_DASH.gif)|
+
 # License
 
 ```

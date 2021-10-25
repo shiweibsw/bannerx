@@ -58,15 +58,13 @@ public class IndicatorView extends View implements Indicator {
     @IntDef({IndicatorStyle.INDICATOR_CIRCLE,
             IndicatorStyle.INDICATOR_CIRCLE_RECT,
             IndicatorStyle.INDICATOR_BEZIER,
-            IndicatorStyle.INDICATOR_DASH,
-            IndicatorStyle.INDICATOR_BIG_CIRCLE})
+            IndicatorStyle.INDICATOR_DASH})
     @Retention(RetentionPolicy.SOURCE)
     public @interface IndicatorStyle {
         int INDICATOR_CIRCLE = 0;
         int INDICATOR_CIRCLE_RECT = 1;
         int INDICATOR_BEZIER = 2;
         int INDICATOR_DASH = 3;
-        int INDICATOR_BIG_CIRCLE = 4;
     }
 
     public IndicatorView(Context context) {
@@ -186,8 +184,6 @@ public class IndicatorView extends View implements Indicator {
             drawBezier(canvas, midY);
         } else if (indicatorStyle == IndicatorStyle.INDICATOR_DASH) {
             drawDash(canvas, midY);
-        } else if (indicatorStyle == IndicatorStyle.INDICATOR_BIG_CIRCLE) {
-            drawBigCircle(canvas, midY);
         }
     }
 
