@@ -4,7 +4,6 @@
 
 ## Preview
 
-![图片](./screenshot/img.gif)
 ![图片&视频](./screenshot/mix.gif)
 
 ## Functions
@@ -56,9 +55,7 @@ kotlin
                 "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF"
             )
-```
 
-```
             bannerX.apply {
                 val indicatorView = IndicatorView(this@MainActivity)
                     .setIndicatorColor(Color.BLACK)
@@ -154,16 +151,6 @@ BannerX 内置了三种默认的Adapter
 |getPlayer()|获取当前的VidePlayer实例，通过此方法实现Player的控制
 |setPlayer()|设置自定义的player引擎，默认使用的是Exoplayer
 |setVideoPlayWhenReady()|播放器准备完成时候立即播放
-
-[(Back to top)](#table-of-contents)
-
-<!-- This is the place where you give instructions to developers on how to modify the code.
-
-You could give **instructions in depth** of **how the code works** and how everything is put together.
-
-You could also give specific instructions to how they can setup their development environment.
-
-Ideally, you should keep the README simple. If you need to add more complex explanations, use a wiki. Check out [this wiki](https://github.com/navendu-pottekkat/nsfw-filter/wiki) for inspiration. -->
 
 # License
 
