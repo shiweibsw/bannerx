@@ -4,9 +4,9 @@
 
 ## Preview
 
-![图片](screenshot/img.gif)
-![视频](screenshot/video.gif)
-![图片&视频](screenshot/mix.gif)
+![图片](../screenshot/img.gif)
+![视频](../screenshot/video.gif)
+![图片&视频](../screenshot/mix.gif)
 
 ## Functions
 
