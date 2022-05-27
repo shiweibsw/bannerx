@@ -43,13 +43,13 @@ open class DefaultVideoAdapter(
 
     override fun onViewAttachedToWindow(holder: DefaultVideoHolder) {
         super.onViewAttachedToWindow(holder)
-        if (getItemViewType(holder.layoutPosition) == TYPE_VIDEO)
+        if (holder.itemViewType == TYPE_VIDEO)
             holder.addPlayerListener()
     }
 
     override fun onViewDetachedFromWindow(holder: DefaultVideoHolder) {
         super.onViewDetachedFromWindow(holder)
-        if (getItemViewType(holder.layoutPosition) == TYPE_VIDEO)
+        if (holder.itemViewType == TYPE_VIDEO)
             holder.removePlayerListener()
     }
 

@@ -7,6 +7,7 @@ import android.os.Environment
 import android.view.Gravity
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.viewpager2.widget.ViewPager2
 import com.android.view.bannerx.databinding.ActivityMainBinding
 import com.android.view.bannerx.library.BannerX.Companion.OVER_LAP
 import com.android.view.bannerx.library.BannerX.Companion.ZOOM_OUT
@@ -26,11 +27,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bingding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         bingding.apply {
+//            val banners = mutableListOf<String>(
+//                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+//                "http://vjs.zencdn.net/v/oceans.mp4",
+//                "https://media.w3.org/2010/05/sintel/trailer.mp4"
+//            )
             val banners = mutableListOf<String>(
                 "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF",
                 "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF"
-
             )
             bannerX.apply {
                 val indicatorView = IndicatorView(this@MainActivity)
@@ -58,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                             Glide.with(holder.itemView).load(banners[position]).into(holder.ivImg!!)
                     }
                 }
-                addPageTransformer(ZoomOutTransformer())
                 setAdapter(mAdapter)
                 start()
             }

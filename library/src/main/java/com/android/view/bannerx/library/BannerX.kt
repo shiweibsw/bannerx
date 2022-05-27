@@ -27,7 +27,6 @@ import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
-import javax.xml.transform.Transformer
 
 
 /**
@@ -41,7 +40,6 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
         const val OVER_LAP = 1
     }
 
-    private val TAG = "BannerX"
     private val MIN_LOOP_TIME: Long = 1000
     private val DEFUT_LOOP_TIME: Long = 3000
     private val DEFUT_SCROLL_TIME: Int = 800
@@ -315,13 +313,14 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
             adapter.setDatas(banners)
         } else {
             currentItemIndex = 0
-            banners = adapter.getDatas()
+            banners.clear()
+            banners.addAll(adapter.getDatas())
         }
         mAdapter = adapter
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = banners.size
         viewPager.setCurrentItem(currentItemIndex, false)
-        mIndicator?.let { it.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex)) }
+        mIndicator?.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex))
     }
 
     /**
@@ -340,10 +339,9 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
                 banners = l
             }
             it.setDatas(banners)
-            it.notifyDataSetChanged()
         }
         viewPager.setCurrentItem(currentItemIndex, false)
-        mIndicator?.let { it.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex)) }
+        mIndicator?.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex))
     }
 
     /**

@@ -29,7 +29,7 @@
         mavenCentral()
  }
  
- implementation 'io.github.shiwebsw:bannerx:1.1.1'
+ implementation 'io.github.shiwebsw:bannerx:1.1.2'
 ```
 
 ## Usage
