@@ -1,5 +1,6 @@
 package com.android.view.bannerx.library.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
@@ -21,6 +22,7 @@ open class DefaultVideoAdapter(
     private var banners: MutableList<String>,
 ) :
     BannerXAdapter<String, DefaultVideoAdapter.DefaultVideoHolder>(banners) {
+    private  val TAG = "BaishiweiBannerX"
 
     override fun getItemViewType(position: Int): Int {
         return if (banners[position].endsWith("mp4")) TYPE_VIDEO else TYPE_IMG
@@ -60,8 +62,7 @@ open class DefaultVideoAdapter(
     inner class DefaultVideoHolder internal constructor(
         var player: BannerPlayer,
         private val view: View
-    ) :
-        RecyclerView.ViewHolder(view) {
+    ) : RecyclerView.ViewHolder(view) {
         var ivImg: ImageView? = null
         private var controllPanel: RelativeLayout? = null
         private var ivStatus: ImageView? = null
@@ -70,6 +71,7 @@ open class DefaultVideoAdapter(
         private var seekBar: SeekBar? = null
         private var dragging = false
         internal fun bind(p: Int, item: String, type: Int) {
+            Log.i(TAG, "bind: item:$item--position:$p")
             if (type == TYPE_IMG) {
                 ivImg = view.findViewById(R.id.ivImg)
             } else {
@@ -77,11 +79,11 @@ open class DefaultVideoAdapter(
                 textureViews[p] = videoView
                 videoUrls[p] = item
 
-                controllPanel = view.findViewById<RelativeLayout>(R.id.controllPanel)
-                seekBar = view.findViewById<SeekBar>(R.id.seekBar)
-                positionView = view.findViewById<TextView>(R.id.positionView)
-                durationView = view.findViewById<TextView>(R.id.durationView)
-                ivStatus = view.findViewById<ImageView>(R.id.ivStatus)
+                controllPanel = view.findViewById(R.id.controllPanel)
+                seekBar = view.findViewById(R.id.seekBar)
+                positionView = view.findViewById(R.id.positionView)
+                durationView = view.findViewById(R.id.durationView)
+                ivStatus = view.findViewById(R.id.ivStatus)
                 ivStatus?.setOnClickListener {
                     if (player.isPlaying()) {
                         player.pause()

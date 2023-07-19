@@ -28,6 +28,7 @@ abstract class BannerXAdapter<T, VH : RecyclerView.ViewHolder>(var mDatas: Mutab
         mDatas.addAll(datas)
         textureViews = arrayOfNulls(mDatas.size)
         videoUrls = arrayOfNulls(mDatas.size)
+        notifyDataSetChanged()
     }
 
     fun getDatas(): MutableList<T> = mDatas
@@ -37,4 +38,7 @@ abstract class BannerXAdapter<T, VH : RecyclerView.ViewHolder>(var mDatas: Mutab
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {}
+
+
+
 }

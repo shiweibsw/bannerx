@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.AttributeSet
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.IntDef
@@ -35,6 +36,7 @@ import java.lang.annotation.RetentionPolicy
  * @Email shiweibsw@gmail.com
  */
 class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLayout {
+    private  val TAG = "BaishiweiBannerX"
     companion object {
         const val ZOOM_OUT = 0
         const val OVER_LAP = 1
@@ -173,6 +175,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
             }
         })
         addView(viewPager)
+
     }
 
     @SuppressLint("Recycle")
@@ -204,8 +207,8 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
     }
 
     private fun moveToNextItem() {
-        if (getViewPager2().adapter?.getItemViewType(currentItemIndex) == BannerXAdapter.TYPE_VIDEO) {
-            postDelayed({ playVideo(currentItemIndex) }, 200)// wait for arrays prepared
+        if (mAdapter?.getItemViewType(currentItemIndex) == BannerXAdapter.TYPE_VIDEO) {
+            postDelayed({ playVideo(currentItemIndex) }, 50)// wa
         } else {
             pauseVideo()
             if (isAutoLoop && banners.size > 1)
@@ -270,6 +273,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
     }
 
     private fun playVideo(position: Int) {
+        Log.i(TAG, "playVideo: position:$position--banners size:${banners.size}")
         getVideoPlayer().setVideoTextureView(mAdapter?.getTextureView(position))
         getVideoPlayer().prepare(mAdapter?.getVideoUrl(position))
         getVideoPlayer().setPlayWhenReady(playWhenReady)
@@ -310,6 +314,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
         if (isInfiniteLoop && adapter.getDatas().size > 1) {
             currentItemIndex = 1
             createReaDatas(adapter.getDatas())
+            //给adapter更新数据，因为在上一步createReaDatas中数据源已经改变
             adapter.setDatas(banners)
         } else {
             currentItemIndex = 0
@@ -317,7 +322,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
             banners.addAll(adapter.getDatas())
         }
         mAdapter = adapter
-        viewPager.adapter = adapter
+        viewPager.adapter = mAdapter
         viewPager.offscreenPageLimit = banners.size
         viewPager.setCurrentItem(currentItemIndex, false)
         mIndicator?.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex))
@@ -326,10 +331,12 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
     /**
      * set new datas for bannerx
      */
+    @SuppressLint("NotifyDataSetChanged")
     fun setNewDatas(l: MutableList<T>) {
         if (mAdapter == null) {
             throw IllegalArgumentException("please set an adapter first!")
         }
+        pauseVideo()
         mAdapter?.let {
             if (isInfiniteLoop && l.size > 1) {
                 currentItemIndex = 1
@@ -342,6 +349,7 @@ class BannerX<T, BA : BannerXAdapter<T, out RecyclerView.ViewHolder>> : FrameLay
         }
         viewPager.setCurrentItem(currentItemIndex, false)
         mIndicator?.initIndicatorCount(getRealCount(), toRealPosition(currentItemIndex))
+        start()
     }
 
     /**
