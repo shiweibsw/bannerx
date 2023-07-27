@@ -15,18 +15,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bingding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
         bingding.apply {
-
             val banners1 = mutableListOf<String>(
                 "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
                 "http://vjs.zencdn.net/v/oceans.mp4",
-
             )
             val banners2 = mutableListOf<String>(
                 "https://media.w3.org/2010/05/sintel/trailer.mp4",
                 "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF",
-
             )
 //            val banners = mutableListOf<String>(
 //                "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",

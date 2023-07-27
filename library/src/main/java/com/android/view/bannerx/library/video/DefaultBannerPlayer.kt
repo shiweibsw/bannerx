@@ -3,9 +3,7 @@ package com.android.view.bannerx.library.video
 import android.content.Context
 import android.net.Uri
 import android.os.*
-import android.util.Log
 import android.view.TextureView
-import com.android.view.bannerx.library.util.Platform
 import com.android.view.bannerx.library.util.PlayerConfigUtil
 import com.danikula.videocache.HttpProxyCacheServer
 import com.google.android.exoplayer2.*
@@ -57,8 +55,7 @@ class DefaultBannerPlayer(var context: Context) : BannerPlayer {
         /**handle audio focus*/
         realPlayer?.setAudioAttributes(AudioAttributes.DEFAULT, true)
     }
-
-    inner class PlayerEventListener : Player.EventListener {
+    inner class PlayerEventListener : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
             when (state) {
@@ -100,7 +97,7 @@ class DefaultBannerPlayer(var context: Context) : BannerPlayer {
     private fun updateProgress() {
         // Cancel any pending updates and schedule a new one if necessary.
         mainHandler.removeCallbacks(updateProgressAction)
-        var playbackState = realPlayer?.playbackState
+        val playbackState = realPlayer?.playbackState
         if (isPlaying()) {
             val duration: Long = getDuration()
             val position: Long = getCurrentPosition()

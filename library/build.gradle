@@ -34,7 +34,7 @@ android {
 
 dependencies {
     compileOnly 'org.checkerframework:checker-qual:3.3.0'
-    api 'com.google.android.exoplayer:exoplayer-core:2.15.0'
+    api 'com.google.android.exoplayer:exoplayer-core:2.18.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'com.danikula:videocache:2.7.1'
