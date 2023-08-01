@@ -6,9 +6,12 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.TextureView
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import com.android.view.bannerx.library.image.BannerImageLoader
 import com.android.view.bannerx.library.video.BannerVideoPlayer
 import com.android.view.bannerx.library.video.DefaultBannerPlayer
@@ -18,6 +21,8 @@ import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import java.lang.IllegalArgumentException
 
 class BannerX : FrameLayout {
+    private val TAG = "BannerX=========="
+
     companion object {
         const val HANDLER_PLAY_TASK = 0
         const val MIN_LOOP_TIME: Long = 1000
@@ -54,6 +59,8 @@ class BannerX : FrameLayout {
      */
     private var imageLoader: BannerImageLoader? = null
 
+    private var loadingView: ProgressBar? = null
+
     constructor(context: Context) : super(context) {
         init(null)
     }
@@ -63,9 +70,7 @@ class BannerX : FrameLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
-        context,
-        attrs,
-        defStyle
+        context, attrs, defStyle
     ) {
         init(attrs)
     }
@@ -98,8 +103,7 @@ class BannerX : FrameLayout {
     }
 
     private fun clearHandlerTask() {
-        if (mHandler.hasMessages(HANDLER_PLAY_TASK))
-            mHandler.removeMessages(HANDLER_PLAY_TASK)
+        if (mHandler.hasMessages(HANDLER_PLAY_TASK)) mHandler.removeMessages(HANDLER_PLAY_TASK)
     }
 
     private fun playItem() {
@@ -113,14 +117,12 @@ class BannerX : FrameLayout {
     }
 
     private fun getVideoPlayer(): BannerVideoPlayer {
-        if (videoPlayer == null)
-            initDefaultVideoPlayer()
+        if (videoPlayer == null) initDefaultVideoPlayer()
         return videoPlayer!!
     }
 
     private fun getImagePlayer(): BannerImageLoader? {
-        if (imageLoader == null)
-            throw IllegalArgumentException("Image player can not be empty1")
+        if (imageLoader == null) throw IllegalArgumentException("Image player can not be empty1")
         return imageLoader
     }
 
@@ -133,13 +135,27 @@ class BannerX : FrameLayout {
     private fun setInnerPlayerListener() {
         videoPlayer?.addEventListener(object : InnerPlayerListener {
             override fun onComplete() {
-                if (banners.size > 1)
-                    mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, 0)
+                if (banners.size > 1) mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, 0)
             }
 
             override fun onError() {
-                if (banners.size > 1)
-                    mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, 0)
+                if (banners.size > 1) mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, 0)
+            }
+
+            override fun onBuffering() {
+                loadingView = ProgressBar(context)
+                addView(
+                    loadingView, LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER
+                    )
+                )
+            }
+
+            override fun onReady(duration: Long) {
+                removeView(loadingView)
+                loadingView = null
             }
         })
     }
@@ -151,22 +167,18 @@ class BannerX : FrameLayout {
         getVideoPlayer().setVideoTextureView(textureView)
         getVideoPlayer().prepare(banners[position].url)
         getVideoPlayer().setPlayWhenReady(playWhenReady)
-        if (banners.size == 1)
-            getVideoPlayer().setRepeatMode(REPEAT_MODE_ONE)
-        else
-            getVideoPlayer().setRepeatMode(REPEAT_MODE_OFF)
+        if (banners.size == 1) getVideoPlayer().setRepeatMode(REPEAT_MODE_ONE)
+        else getVideoPlayer().setRepeatMode(REPEAT_MODE_OFF)
 
     }
 
     private fun playImage(position: Int) {
         removeAllViews()
-        if (getVideoPlayer().isPlaying())
-            pauseVideo()
+        if (getVideoPlayer().isPlaying()) pauseVideo()
         val imageView = ImageView(context)
         getImagePlayer()?.showImage(banners[position].url, imageView)
         addView(imageView)
-        if (banners.size > 1)
-            mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, mLoopTime)
+        if (banners.size > 1) mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, mLoopTime)
     }
 
 
@@ -188,8 +200,7 @@ class BannerX : FrameLayout {
      * set data's for banner
      */
     fun setInstance(l: MutableList<MediaBean>) {
-        if (getVideoPlayer().isPlaying())
-            pauseVideo()
+        if (getVideoPlayer().isPlaying()) pauseVideo()
         clearHandlerTask()
         currentIndex = 0
         banners.clear()

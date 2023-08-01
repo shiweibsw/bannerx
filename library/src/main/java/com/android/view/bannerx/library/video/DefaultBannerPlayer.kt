@@ -69,9 +69,15 @@ class DefaultBannerPlayer(private var context: Context) : BannerVideoPlayer {
                 }
 
                 Player.STATE_BUFFERING -> {
+                    for (listener in listeners) {
+                        listener.onBuffering()
+                    }
                 }
 
                 Player.STATE_IDLE -> {
+                    for (listener in listeners) {
+                        listener.onIDLE()
+                    }
                 }
             }
         }
