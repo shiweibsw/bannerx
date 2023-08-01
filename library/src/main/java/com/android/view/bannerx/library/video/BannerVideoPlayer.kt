@@ -8,7 +8,7 @@ import com.google.android.exoplayer2.Player
  * @Date 2021/10/20-16:56
  * @Email shiweibsw@gmail.com
  */
-interface BannerPlayer {
+interface BannerVideoPlayer {
     fun play()
     fun pause()
     fun stop()

@@ -13,7 +13,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
 
-class DefaultBannerPlayer(var context: Context) : BannerPlayer {
+class DefaultBannerPlayer(var context: Context) : BannerVideoPlayer {
 
     private var trackSelector: DefaultTrackSelector
     private var trackSelectorParameters: DefaultTrackSelector.Parameters
@@ -32,7 +32,7 @@ class DefaultBannerPlayer(var context: Context) : BannerPlayer {
 
     init {
         mainHandler = Handler(Looper.getMainLooper())
-        var handlerThread = HandlerThread("download_imgage")
+        val handlerThread = HandlerThread("download_imgage")
         handlerThread.start()
         /**config player and init**/
         val dataSourceFactory = PlayerConfigUtil.getDataSourceFactory(context)
