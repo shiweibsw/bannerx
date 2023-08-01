@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.view.TextureView
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.android.view.bannerx.library.image.BannerImagePlayer
+import com.android.view.bannerx.library.image.BannerImageLoader
 import com.android.view.bannerx.library.video.BannerVideoPlayer
 import com.android.view.bannerx.library.video.DefaultBannerPlayer
 import com.android.view.bannerx.library.video.InnerPlayerListener
@@ -17,57 +17,49 @@ import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import java.lang.IllegalArgumentException
 
-data class MediaBean(val url: String) {
-    fun isVideo(): Boolean {
-        return url.endsWith("mp4")
-    }
-}
-
-/**
- * @Author shiwei
- * @Date 2021/10/18-16:19
- * @Email shiweibsw@gmail.com
- */
 class BannerX : FrameLayout {
-    private val TAG = "BaishiweiBannerX"
-
     companion object {
-        const val ZOOM_OUT = 0
-        const val OVER_LAP = 1
+        const val HANDLER_PLAY_TASK = 0
+        const val MIN_LOOP_TIME: Long = 1000
+        const val DEFAULT_LOOP_TIME: Long = 5000
     }
-
-    private val HANDLER_TASK = 0
-    private val MIN_LOOP_TIME: Long = 1000
-    private val DEFUT_LOOP_TIME: Long = 3000
 
     /**
      *  each item show time ,default is 3 second.
      */
-    private var mLoopTime: Long = DEFUT_LOOP_TIME
+    private var mLoopTime: Long = DEFAULT_LOOP_TIME
 
     /**
      * current item index ,default 0
      */
-    private var currentItemIndex = 0
+    private var currentIndex = 0
 
     /**
      * video player play when ready
      */
     private var playWhenReady: Boolean = true
 
-
+    /**
+     * Actual data
+     */
     private var banners = mutableListOf<MediaBean>()
 
+    /**
+     * video player
+     */
     private var videoPlayer: BannerVideoPlayer? = null
 
-    private var imagePlayer: BannerImagePlayer? = null
+    /**
+     * image loader
+     */
+    private var imageLoader: BannerImageLoader? = null
 
     constructor(context: Context) : super(context) {
-        init(null, 0)
+        init(null)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
+        init(attrs)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
@@ -75,18 +67,19 @@ class BannerX : FrameLayout {
         attrs,
         defStyle
     ) {
-        init(attrs, defStyle)
+        init(attrs)
     }
 
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
-        initAttrs(attrs, defStyle)
+    private fun init(attrs: AttributeSet?) {
+        initAttrs(attrs)
     }
 
     @SuppressLint("Recycle")
-    private fun initAttrs(attrs: AttributeSet?, defStyle: Int) {
+    private fun initAttrs(attrs: AttributeSet?) {
         attrs?.let {
             val a = context.obtainStyledAttributes(attrs, R.styleable.BannerX)
-            mLoopTime = a.getInt(R.styleable.BannerX_bannerx_loop_time, DEFUT_LOOP_TIME.toInt()).toLong()
+            mLoopTime =
+                a.getInt(R.styleable.BannerX_bannerx_loop_time, DEFAULT_LOOP_TIME.toInt()).toLong()
             a.recycle()
         }
     }
@@ -95,22 +88,26 @@ class BannerX : FrameLayout {
     val mHandler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            currentItemIndex = (++currentItemIndex) % banners.size
-            playItem()
+            when (msg.what) {
+                HANDLER_PLAY_TASK -> {
+                    currentIndex = (++currentIndex) % banners.size
+                    playItem()
+                }
+            }
         }
     }
 
     private fun clearHandlerTask() {
-        if (mHandler.hasMessages(HANDLER_TASK))
-            mHandler.removeMessages(HANDLER_TASK)
+        if (mHandler.hasMessages(HANDLER_PLAY_TASK))
+            mHandler.removeMessages(HANDLER_PLAY_TASK)
     }
 
     private fun playItem() {
-        if (banners.indices.contains(currentItemIndex)) {
-            if (banners[currentItemIndex].isVideo()) {
-                playVideo(currentItemIndex)
+        if (banners.indices.contains(currentIndex)) {
+            if (banners[currentIndex].isVideo()) {
+                playVideo(currentIndex)
             } else {
-                playImage(currentItemIndex)
+                playImage(currentIndex)
             }
         }
     }
@@ -121,12 +118,11 @@ class BannerX : FrameLayout {
         return videoPlayer!!
     }
 
-    private fun getImagePlayer(): BannerImagePlayer? {
-        if (imagePlayer == null)
+    private fun getImagePlayer(): BannerImageLoader? {
+        if (imageLoader == null)
             throw IllegalArgumentException("Image player can not be empty1")
-        return imagePlayer
+        return imageLoader
     }
-
 
 
     private fun initDefaultVideoPlayer() {
@@ -138,12 +134,12 @@ class BannerX : FrameLayout {
         videoPlayer?.addEventListener(object : InnerPlayerListener {
             override fun onComplete() {
                 if (banners.size > 1)
-                    mHandler.sendEmptyMessageDelayed(HANDLER_TASK, 0)
+                    mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, 0)
             }
 
             override fun onError() {
                 if (banners.size > 1)
-                    mHandler.sendEmptyMessageDelayed(HANDLER_TASK, 0)
+                    mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, 0)
             }
         })
     }
@@ -167,10 +163,10 @@ class BannerX : FrameLayout {
         if (getVideoPlayer().isPlaying())
             pauseVideo()
         val imageView = ImageView(context)
-        getImagePlayer()?.showImage(banners[position].url,imageView)
+        getImagePlayer()?.showImage(banners[position].url, imageView)
         addView(imageView)
         if (banners.size > 1)
-            mHandler.sendEmptyMessageDelayed(HANDLER_TASK, mLoopTime)
+            mHandler.sendEmptyMessageDelayed(HANDLER_PLAY_TASK, mLoopTime)
     }
 
 
@@ -182,33 +178,59 @@ class BannerX : FrameLayout {
     }
 
     private fun releaseVideo() {
-        if (getVideoPlayer().isPlaying()) {
-            getVideoPlayer().pause()
-            getVideoPlayer().stop()
-        }
+        pauseVideo()
         getVideoPlayer().release()
     }
 
     //======================================public method==============================
 
     /**
-     * set datas for bannerx
+     * set data's for banner
      */
-    fun setDatas(l: MutableList<MediaBean>) {
+    fun setInstance(l: MutableList<MediaBean>) {
         if (getVideoPlayer().isPlaying())
             pauseVideo()
         clearHandlerTask()
-        currentItemIndex = 0
+        currentIndex = 0
         banners.clear()
         banners.addAll(l)
         playItem()
     }
 
     /**
-     * If isAutoLoop is true ,this method must be called.
+     * Set current item
      */
-    fun start() {
+    fun setCurrentItem(position: Int) {
+        if (position < 0 || position >= banners.size) {
+            return
+        }
+        currentIndex = position
+        clearHandlerTask()
         playItem()
+    }
+
+    internal fun seVideoPlayer(player: BannerVideoPlayer) {
+        videoPlayer = player
+        setInnerPlayerListener()
+    }
+
+    fun setImagePlayer(player: BannerImageLoader) {
+        imageLoader = player
+    }
+
+    fun setVideoPlayWhenReady(flag: Boolean) {
+        playWhenReady = flag
+    }
+
+    /**
+     * Set the loop time for each item
+     */
+    fun setLoopTime(time: Long) {
+        mLoopTime = if (time < MIN_LOOP_TIME) {
+            DEFAULT_LOOP_TIME
+        } else {
+            time
+        }
     }
 
     fun destroy() {
@@ -217,40 +239,10 @@ class BannerX : FrameLayout {
         banners.clear()
         removeAllViews()
     }
+}
 
-    /**
-     * Set current item
-     */
-    fun setCurrentItem(position: Int, smoothScroll: Boolean = true) {
-        if (position < 0 && position >= banners.size) {
-            return
-        }
-        currentItemIndex = position
-        playItem()
-    }
-
-    fun seVideoPlayer(player: BannerVideoPlayer) {
-        videoPlayer = player
-        setInnerPlayerListener()
-    }
-
-    fun setImagePlayer(player: BannerImagePlayer) {
-        imagePlayer = player
-    }
-
-    fun setVideoPlayWhenReady(flag: Boolean) {
-        playWhenReady = flag
-    }
-
-
-    /**
-     * Set the loop time for each item
-     */
-    fun setLoopTime(time: Long) {
-        if (time < MIN_LOOP_TIME) {
-            mLoopTime = DEFUT_LOOP_TIME
-        } else {
-            mLoopTime = time
-        }
+data class MediaBean(val url: String) {
+    fun isVideo(): Boolean {
+        return url.endsWith("mp4")
     }
 }

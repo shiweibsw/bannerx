@@ -31,16 +31,17 @@ class MainActivity : AppCompatActivity() {
             btnToggle.setOnClickListener {
                 banners.clear()
                 banners.addAll(banners1.map { MediaBean(it) })
-                bannerX.setDatas(banners)
+                bannerX.setInstance(banners)
             }
             btnToggle2.setOnClickListener {
                 banners.clear()
                 banners.addAll(banners2.map { MediaBean(it) })
-                bannerX.setDatas(banners)
+                bannerX.setInstance(banners)
             }
             bannerX.apply {
-                setImagePlayer(GlideImageBanner())
-                setDatas(banners)
+                setImagePlayer(GlideImageLoader())
+                setLoopTime(5000)
+                setInstance(banners)
             }
         }
     }

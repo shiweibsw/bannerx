@@ -3,11 +3,6 @@ package com.android.view.bannerx.library.video
 import android.view.TextureView
 import com.google.android.exoplayer2.Player
 
-/**
- * @Author shiwei
- * @Date 2021/10/20-16:56
- * @Email shiweibsw@gmail.com
- */
 interface BannerVideoPlayer {
     fun play()
     fun pause()

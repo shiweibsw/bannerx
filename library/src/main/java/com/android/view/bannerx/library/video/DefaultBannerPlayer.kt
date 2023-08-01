@@ -13,31 +13,28 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
 
-class DefaultBannerPlayer(var context: Context) : BannerVideoPlayer {
+class DefaultBannerPlayer(private var context: Context) : BannerVideoPlayer {
+    companion object {
+        /** The maximum interval between time bar position updates. */
+        const val MAX_UPDATE_INTERVAL_MS = 1000L
+
+        /** The default minimum interval between time bar position updates.  */
+        const val DEFAULT_TIME_BAR_MIN_UPDATE_INTERVAL_MS = 200L
+    }
 
     private var trackSelector: DefaultTrackSelector
     private var trackSelectorParameters: DefaultTrackSelector.Parameters
-    private var realPlayer: SimpleExoPlayer? = null
-    private var mainHandler: Handler
+    private var realPlayer: ExoPlayer? = null
+    private var mainHandler: Handler = Handler(Looper.getMainLooper())
     private var proxy: HttpProxyCacheServer? = null
-
-    //    private var innerPlayerListener: InnerPlayerListener? = null
     private val listeners: HashSet<InnerPlayerListener> = HashSet()
 
-    /** The maximum interval between time bar position updates. */
-    private val MAX_UPDATE_INTERVAL_MS = 1000L
-
-    /** The default minimum interval between time bar position updates.  */
-    private val DEFAULT_TIME_BAR_MIN_UPDATE_INTERVAL_MS = 200L
-
     init {
-        mainHandler = Handler(Looper.getMainLooper())
-        val handlerThread = HandlerThread("download_imgage")
+        val handlerThread = HandlerThread("download_image")
         handlerThread.start()
-        /**config player and init**/
         val dataSourceFactory = PlayerConfigUtil.getDataSourceFactory(context)
 
-        val builder = DefaultTrackSelector.ParametersBuilder(context)
+        val builder = DefaultTrackSelector.Parameters.Builder(context)
         trackSelectorParameters = builder.build()
 
         val mediaSourceFactory = DefaultMediaSourceFactory(dataSourceFactory)
@@ -45,16 +42,16 @@ class DefaultBannerPlayer(var context: Context) : BannerVideoPlayer {
         trackSelector = DefaultTrackSelector(context)
         trackSelector.parameters = trackSelectorParameters
 
-        realPlayer = SimpleExoPlayer.Builder(context)
+        realPlayer = ExoPlayer.Builder(context)
             .setMediaSourceFactory(mediaSourceFactory)
             .setTrackSelector(trackSelector)
             .build()
 
         realPlayer?.addListener(PlayerEventListener())
-        realPlayer?.addAnalyticsListener(EventLogger(trackSelector))
-        /**handle audio focus*/
+        realPlayer?.addAnalyticsListener(EventLogger())
         realPlayer?.setAudioAttributes(AudioAttributes.DEFAULT, true)
     }
+
     inner class PlayerEventListener : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
@@ -64,10 +61,17 @@ class DefaultBannerPlayer(var context: Context) : BannerVideoPlayer {
                         listener.onReady(getDuration())
                     }
                 }
+
                 Player.STATE_ENDED -> {
                     for (listener in listeners) {
                         listener.onComplete()
                     }
+                }
+
+                Player.STATE_BUFFERING -> {
+                }
+
+                Player.STATE_IDLE -> {
                 }
             }
         }
@@ -140,7 +144,7 @@ class DefaultBannerPlayer(var context: Context) : BannerVideoPlayer {
         return if (proxy == null) newProxy().also { proxy = it } else proxy
     }
 
-    private fun newProxy(): HttpProxyCacheServer? {
+    private fun newProxy(): HttpProxyCacheServer {
         return HttpProxyCacheServer(context)
     }
 
