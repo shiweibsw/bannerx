@@ -122,7 +122,7 @@ class BannerX : FrameLayout {
     }
 
     private fun getImagePlayer(): BannerImageLoader? {
-        if (imageLoader == null) throw IllegalArgumentException("Image player can not be empty1")
+        if (imageLoader == null) throw IllegalArgumentException("Image player can not be empty！")
         return imageLoader
     }
 
@@ -196,6 +196,7 @@ class BannerX : FrameLayout {
 
     //======================================public method==============================
 
+
     /**
      * set data's for banner
      */
@@ -218,6 +219,16 @@ class BannerX : FrameLayout {
         currentIndex = position
         clearHandlerTask()
         playItem()
+    }
+
+    fun play() {
+        clearHandlerTask()
+        playItem()
+    }
+
+    fun pause() {
+        clearHandlerTask()
+        pauseVideo()
     }
 
     internal fun seVideoPlayer(player: BannerVideoPlayer) {

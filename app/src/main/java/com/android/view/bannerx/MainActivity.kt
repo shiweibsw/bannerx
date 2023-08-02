@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
                 "https://media.w3.org/2010/05/sintel/trailer.mp4",
                 "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF",
             )
-            val banner0 = mutableListOf<String>(
+            val banner0 = mutableListOf(
                 "https://t7.baidu.com/it/u=1956604245,3662848045&fm=193&f=GIF",
                 "https://t7.baidu.com/it/u=825057118,3516313570&fm=193&f=GIF",
                 "https://t7.baidu.com/it/u=938052523,709452322&fm=193&f=GIF"
@@ -42,6 +42,13 @@ class MainActivity : AppCompatActivity() {
                 setImagePlayer(GlideImageLoader())
                 setLoopTime(5000)
                 setInstance(banners)
+            }
+            btnPlay.setOnClickListener {
+                bannerX.play()
+            }
+
+            btnPause.setOnClickListener {
+                bannerX.pause()
             }
         }
     }
